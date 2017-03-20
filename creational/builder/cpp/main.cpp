@@ -2,8 +2,6 @@
 // https://sourcemaking.com/design_patterns/builder
 
 #include <iostream>
-#include <cstdio>
-#include <cstring>
 
 using std::cout;
 using std::endl;
@@ -17,38 +15,38 @@ enum PersistenceType
 struct PersistenceAttribute
 {
     PersistenceType type;
-    char value[30];
+    string value;
 };
 
 class DistrWorkPackage
 {
 public:
-    DistrWorkPackage(const char *type)
+    DistrWorkPackage(string type)
     {
-        sprintf(_desc, "Distributed Work Package for: %s", type);
+        desc_ = "Distributed Work Package for: " + type;
     }
-    void setFile(const char *f, const char *v)
+    void setFile(string f, string v)
     {
-        sprintf(_temp, "\n  File(%s): %s", f, v);
-        strcat(_desc, _temp);
+        tmp_ = "\n  File(" + f + "): " + v;
+        desc_ += tmp_;
     }
-    void setQueue(const char *q, const char *v)
+    void setQueue(string q, string v)
     {
-        sprintf(_temp, "\n  Queue(%s): %s", q, v);
-        strcat(_desc, _temp);
+        tmp_ = "\n  Queue(" + q + "): " + v;
+        desc_ += tmp_;
     }
-    void setPathway(const char *p, const char *v)
+    void setPathway(string p, string v)
     {
-        sprintf(_temp, "\n  Pathway(%s): %s", p, v);
-        strcat(_desc, _temp);
+        tmp_ = "\n  Pathway(" + p + "): " + v;
+        desc_ += tmp_;
     }
-    const char *getState()
+    string getState()
     {
-        return _desc;
+        return desc_;
     }
 
 private:
-    char _desc[200], _temp[80];
+    string desc_, tmp_;
 };
 
 class Builder
@@ -76,15 +74,15 @@ public:
     }
     void configureFile(string name)
     {
-        _result->setFile("flatFile", name.c_str());
+        _result->setFile("flatFile", name);
     }
     void configureQueue(string queue)
     {
-        _result->setQueue("FIFO", queue.c_str());
+        _result->setQueue("FIFO", queue);
     }
     void configurePathway(string type)
     {
-        _result->setPathway("thread", type.c_str());
+        _result->setPathway("thread", type);
     }
 };
 
@@ -97,15 +95,15 @@ public:
     }
     void configureFile(string name)
     {
-        _result->setFile("ISAM", name.c_str());
+        _result->setFile("ISAM", name);
     }
     void configureQueue(string queue)
     {
-        _result->setQueue("priority", queue.c_str());
+        _result->setQueue("priority", queue);
     }
     void configurePathway(string type)
     {
-        _result->setPathway("LWP", type.c_str());
+        _result->setPathway("LWP", type);
     }
 };
 
