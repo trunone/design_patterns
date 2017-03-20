@@ -4,31 +4,35 @@
 #include <iostream>
 
 using std::cout;
+using std::endl;
+using std::string;
 
 /* Abstract base class declared by framework */
 class Document
 {
 public:
-    Document(char *fn)
+    Document(string fn)
     {
-        strcpy(name, fn);
+        name = fn;
     }
+
     virtual void Open() = 0;
     virtual void Close() = 0;
-    char *GetName()
+
+    string GetName()
     {
         return name;
     }
 
 private:
-    char name[20];
+    string name;
 };
 
 /* Concrete derived class defined by client */
 class MyDocument: public Document
 {
 public:
-    MyDocument(char *fn): Document(fn) {}
+    MyDocument(string fn): Document(fn) {}
     void Open()
     {
         cout << "   MyDocument: Open()" << endl;
@@ -48,7 +52,7 @@ public:
         cout << "Application: ctor" << endl;
     }
     /* The client will call this "entry point" of the framework */
-    NewDocument(char *name)
+    void NewDocument(string name)
     {
         cout << "Application: NewDocument()" << endl;
         /* Framework calls the "hole" reserved for client customization */
@@ -58,7 +62,7 @@ public:
     void OpenDocument() {}
     void ReportDocs();
     /* Framework declares a "hole" for the client to customize */
-    virtual Document *CreateDocument(char*) = 0;
+    virtual Document *CreateDocument(string) = 0;
 
 private:
     int _index;
@@ -83,7 +87,7 @@ public:
     }
 
     /* Client defines Framework's "hole" */
-    Document *CreateDocument(char *fn)
+    Document *CreateDocument(string fn)
     {
         cout << "   MyApplication: CreateDocument()" << endl;
         return new MyDocument(fn);
