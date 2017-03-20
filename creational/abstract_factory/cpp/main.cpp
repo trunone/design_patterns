@@ -1,3 +1,6 @@
+// Reference:
+// https://sourcemaking.com/design_patterns/abstract_factory
+
 #include <iostream>
 
 using std::cout;
