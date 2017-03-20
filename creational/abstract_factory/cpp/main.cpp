@@ -7,12 +7,14 @@ using std::cout;
 using std::endl;
 
 class Shape {
-  public:
+public:
     Shape() {
-      id_ = total_++;
+        id_ = total_++;
     }
+
     virtual void draw() = 0;
-  protected:
+
+protected:
     int id_;
     static int total_;
 };
@@ -20,73 +22,75 @@ class Shape {
 int Shape::total_ = 0;
 
 class Circle : public Shape {
-  public:
+public:
     void draw() {
-      cout << "circle " << id_ << ": draw" << endl;
+        cout << "circle " << id_ << ": draw" << endl;
     }
 };
 
 class Square : public Shape {
-  public:
+public:
     void draw() {
-      cout << "square " << id_ << ": draw" << endl;
+        cout << "square " << id_ << ": draw" << endl;
     }
 };
 
 class Ellipse : public Shape {
-  public:
+public:
     void draw() {
-      cout << "ellipse " << id_ << ": draw" << endl;
+        cout << "ellipse " << id_ << ": draw" << endl;
     }
 };
 
 class Rectangle : public Shape {
-  public:
+public:
     void draw() {
-      cout << "rectangle " << id_ << ": draw" << endl;
+        cout << "rectangle " << id_ << ": draw" << endl;
     }
 };
 
 class Factory {
-  public:
+public:
     virtual Shape* createCurvedInstance() = 0;
     virtual Shape* createStraightInstance() = 0;
 };
 
 class SimpleShapeFactory : public Factory {
-  public:
+public:
     Shape* createCurvedInstance() {
-      return new Circle;
+        return new Circle;
     }
+
     Shape* createStraightInstance() {
-      return new Square;
+        return new Square;
     }
 };
 
 class RobustShapeFactory : public Factory {
-  public:
+public:
     Shape* createCurvedInstance()   {
-      return new Ellipse;
+        return new Ellipse;
     }
+
     Shape* createStraightInstance() {
-      return new Rectangle;
+        return new Rectangle;
     }
 };
 
 int main() {
 #ifdef SIMPLE
-  Factory* factory = new SimpleShapeFactory;
+    Factory* factory = new SimpleShapeFactory;
 #elif ROBUST
-  Factory* factory = new RobustShapeFactory;
+    Factory* factory = new RobustShapeFactory;
 #endif
-  Shape* shapes[3];
+    Shape* shapes[3];
 
-  shapes[0] = factory->createCurvedInstance();   // shapes[0] = new Ellipse;
-  shapes[1] = factory->createStraightInstance(); // shapes[1] = new Rectangle;
-  shapes[2] = factory->createCurvedInstance();   // shapes[2] = new Ellipse;
+    shapes[0] = factory->createCurvedInstance();   // shapes[0] = new Ellipse;
+    shapes[1] = factory->createStraightInstance(); // shapes[1] = new Rectangle;
+    shapes[2] = factory->createCurvedInstance();   // shapes[2] = new Ellipse;
 
-  for (int i=0; i < 3; i++) {
-    shapes[i]->draw();
-  }
+    for (int i=0; i < 3; i++) {
+        shapes[i]->draw();
+    }
 }
 

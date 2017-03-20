@@ -11,18 +11,18 @@ using std::string;
 
 enum PersistenceType
 {
-  File, Queue, Pathway
+    File, Queue, Pathway
 };
 
 struct PersistenceAttribute
 {
-  PersistenceType type;
-  char value[30];
+    PersistenceType type;
+    char value[30];
 };
 
 class DistrWorkPackage
 {
-  public:
+public:
     DistrWorkPackage(const char *type)
     {
         sprintf(_desc, "Distributed Work Package for: %s", type);
@@ -46,27 +46,30 @@ class DistrWorkPackage
     {
         return _desc;
     }
-  private:
+
+private:
     char _desc[200], _temp[80];
 };
 
 class Builder
 {
-  public:
+public:
     virtual void configureFile(string) = 0;
     virtual void configureQueue(string) = 0;
     virtual void configurePathway(string) = 0;
+
     DistrWorkPackage *getResult()
     {
         return _result;
     }
-  protected:
+
+protected:
     DistrWorkPackage *_result;
 };
 
 class UnixBuilder: public Builder
 {
-  public:
+public:
     UnixBuilder()
     {
         _result = new DistrWorkPackage("Unix");
@@ -87,7 +90,7 @@ class UnixBuilder: public Builder
 
 class VmsBuilder: public Builder
 {
-  public:
+public:
     VmsBuilder()
     {
         _result = new DistrWorkPackage("Vms");
@@ -108,62 +111,64 @@ class VmsBuilder: public Builder
 
 class Reader
 {
-  public:
+public:
     void setBuilder(Builder *b)
     {
         _builder = b;
     }
+
     void construct(PersistenceAttribute[], int);
-  private:
+
+private:
     Builder *_builder;
 };
 
 void Reader::construct(PersistenceAttribute list[], int num)
 {
-  for (int i = 0; i < num; i++)
-    if (list[i].type == File)
-      _builder->configureFile(list[i].value);
-    else if (list[i].type == Queue)
-      _builder->configureQueue(list[i].value);
-    else if (list[i].type == Pathway)
-      _builder->configurePathway(list[i].value);
+    for (int i = 0; i < num; i++)
+        if (list[i].type == File)
+            _builder->configureFile(list[i].value);
+        else if (list[i].type == Queue)
+            _builder->configureQueue(list[i].value);
+        else if (list[i].type == Pathway)
+            _builder->configurePathway(list[i].value);
 }
 
 const int NUM_ENTRIES = 6;
 
-PersistenceAttribute input[NUM_ENTRIES] = 
+PersistenceAttribute input[NUM_ENTRIES] =
 {
-  {
-    File, "state.dat"
-  }, 
-  {
-    File, "config.sys"
-  }, 
-  {
-    Queue, "compute"
-  }, 
-  {
-    Queue, "log"
-  }, 
-  {
-    Pathway, "authentication"
-  }, 
-  {
-    Pathway, "error processing"
-  }
+    {
+        File, "state.dat"
+    },
+    {
+        File, "config.sys"
+    },
+    {
+        Queue, "compute"
+    },
+    {
+        Queue, "log"
+    },
+    {
+        Pathway, "authentication"
+    },
+    {
+        Pathway, "error processing"
+    }
 };
 
 int main()
 {
-  UnixBuilder unixBuilder;
-  VmsBuilder vmsBuilder;
-  Reader reader;
+    UnixBuilder unixBuilder;
+    VmsBuilder vmsBuilder;
+    Reader reader;
 
-  reader.setBuilder(&unixBuilder);
-  reader.construct(input, NUM_ENTRIES);
-  cout << unixBuilder.getResult()->getState() << endl;
+    reader.setBuilder(&unixBuilder);
+    reader.construct(input, NUM_ENTRIES);
+    cout << unixBuilder.getResult()->getState() << endl;
 
-  reader.setBuilder(&vmsBuilder);
-  reader.construct(input, NUM_ENTRIES);
-  cout << vmsBuilder.getResult()->getState() << endl;
+    reader.setBuilder(&vmsBuilder);
+    reader.construct(input, NUM_ENTRIES);
+    cout << vmsBuilder.getResult()->getState() << endl;
 }
